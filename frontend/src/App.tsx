@@ -1,9 +1,21 @@
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import { lazy, Suspense } from "react";
 import Loader from "./components/Loader";
+import Header from "./components/Header";
+
+const Home = lazy(() => import("./pages/Home"));
+const Cart = lazy(() => import("./pages/Cart"));
+const Search = lazy(() => import("./pages/Search"));
+const Login = lazy(() => import("./pages/Login"));
+const Order = lazy(()=>import("./pages/Order"))
+
+const Shipping = lazy(() => import("./pages/Shipping"));
+
 const NewProduct = lazy(() => import("./pages/admin/NewProduct"));
 const ProductManagement = lazy(() => import("./pages/admin/ProductManagement"));
-const TransactionManagement = lazy(() => import("./pages/admin/TransactionManagement"));
+const TransactionManagement = lazy(
+  () => import("./pages/admin/TransactionManagement")
+);
 const BarCharts = lazy(() => import("./pages/admin/BarChart"));
 const PieCharts = lazy(() => import("./pages/admin/PieCharts"));
 const LineCharts = lazy(() => import("./pages/admin/LineCharts"));
@@ -17,8 +29,12 @@ const Customers = lazy(() => import("./pages/admin/Customers"));
 const Transaction = lazy(() => import("./pages/admin/Transaction"));
 
 const App = () => {
+  const user = {
+    role: "user",
+  };
   return (
     <Router>
+      <Header user={user} />
       <Suspense fallback={<Loader />}>
         <Routes>
           <Route path="/admin/dashboard" element={<Dashboard />} />
@@ -43,6 +59,16 @@ const App = () => {
             path="/admin/transaction/:id"
             element={<TransactionManagement />}
           />
+
+          {/* user routes */}
+          <Route path="/" element={<Home />} />
+          <Route path="/search" element={<Search />} />
+          <Route path="/cart" element={<Cart />} />
+          <Route path="/orders" element={<Order />} />
+          <Route path="/login" element={<Login />} />
+
+          {/* logged in user routes */}
+          <Route path="/shipping" element={<Shipping />} />
         </Routes>
       </Suspense>
     </Router>
