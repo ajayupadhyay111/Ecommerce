@@ -8,7 +8,11 @@ export const errorHandler = (
   next: NextFunction
 ) => {
   const statusCode = err.statusCode || 500;
+
   err.message ||= "Internal Server Error";
+  if(err.name === "CastError"){
+    err.message = "Invalid ID"
+  }
   res.status(statusCode).json({ success: false, message: err.message });
 };
 

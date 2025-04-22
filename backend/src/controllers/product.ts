@@ -4,7 +4,6 @@ import { Product } from "../models/product.js";
 import ErrorHandler from "../utils/utility_class.js";
 import { BaseQuery, SearchRequestQuery } from "../types/types.js";
 import { Request } from "express";
-import { myCache } from "../index.js";
 
 
 export const newProduct = TryCatch(async (req, res, next) => {
@@ -37,26 +36,12 @@ export const newProduct = TryCatch(async (req, res, next) => {
 });
 
 export const getLatestProducts = TryCatch(async (req, res, next) => {
-  let products = []
-
-  if(myCache.has("latest-product")){
-    products = JSON.parse(myCache.get("latest-product")!)
-  }else{
-    products = await Product.find({}).sort({ createdAt: -1 }).limit(5);
-    myCache.set("latest-product",JSON.stringify(products))
-  }
-    
+  const products = await Product.find({}).sort({ createdAt: -1 }).limit(5);
   res.status(200).json({ success: true, products });
 });
 
 export const getAllCategories = TryCatch(async (req, res, next) => {
-  let categories = [];
-  if(myCache.has("categories")){
-    categories = JSON.parse(myCache.get("categories") as string)
-  }else{
-    categories = await Product.distinct("category");
-    myCache.set("categories",JSON.stringify(categories));
-  }
+  const categories = await Product.distinct("category");
   res.status(200).json({ success: true, categories });
 });
 

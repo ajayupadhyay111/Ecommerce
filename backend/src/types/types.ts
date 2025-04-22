@@ -24,7 +24,7 @@ export interface BaseQuery {
   };
   category?: string;
 }
-    
+
 export type OrderItems = {
   name: string;
   photo: string;
